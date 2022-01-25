@@ -38,23 +38,25 @@ Example Use:
 ```
 package main
 
-import "github.com/jimsnab/go-toolprinter"
+import (
+	"github.com/jimsnab/go-toolprinter"
+)
 
 func main() {
-  prn := toolprinter.NewToolPrinter()
+	prn := toolprinter.NewToolPrinter()
 
-  for i := 0 ; i < 100 ; i++ {
-    prn.Statusf("Processing i at %d", i)
-    if i % 9 == 0 {
-      prn.Printlnf("i is divisble by 9 at %d", i)
-    }
-  }
+	for i := 0; i < 100; i++ {
+		prn.Statusf("Processing i at %d", i)
+		if i%9 == 0 {
+			prn.Printlnf("i is divisble by 9 at %d", i)
+		}
+	}
 
-  prn.Clear()
+	prn.Clear()
 }
 ```
 
-[try it](https://go.dev/play/p/A6FqtKDpG2S)
+[try it](https://go.dev/play/p/_2CoJnMNG4-)
 
 ## Status
 `Status()` and `Statusf()` print a single line status message, without a new line. `Clear()` erases the status message.
