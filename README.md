@@ -8,24 +8,24 @@ The interface is:
 
 ```
 type ToolPrinter interface {
-	Status(text string)
+	Status(text ...interface{})
 	Statusf(format string, args ...interface{})
 	Clear()
-	ChattyStatus(text string)
+	ChattyStatus(text ...interface{})
 	ChattyStatusf(format string, args ...interface{})
-	SetCounterMax(text string, max int)
-	UpdateCountStatus(extraStatusText string)
+	SetCounterMax(max int, text ...interface{})
+	UpdateCountStatus(extraStatusText ...interface{})
 	Count()
 	PauseStatus()
 	ResumeStatus()
-	Println(text string)
+	Println(text ...interface{})
 	Printlnf(format string, args ...interface{})
-	BeginPrint(text string)
-	ContinuePrint(text string)
+	BeginPrint(text ...interface{})
+	ContinuePrint(text ...interface{})
 	ContinuePrintf(format string, args ...interface{})
-	EndPrint(text string)
+	EndPrint(text ...interface{})
 	EndPrintIfStarted()
-	DateRangeStatus(from time.Time, to time.Time, purpose string)
+	DateRangeStatus(from time.Time, to time.Time, purpose ...interface{})
 }
 ```
 

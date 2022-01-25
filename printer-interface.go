@@ -31,24 +31,24 @@ func (t *defaultTerminal) GetSize(fd int) (int, int, error) {
 var xterm = terminalData(&defaultTerminal{})
 
 type ToolPrinter interface {
-	Status(text string)
+	Status(text ...interface{})
 	Statusf(format string, args ...interface{})
 	Clear()
-	ChattyStatus(text string)
+	ChattyStatus(text ...interface{})
 	ChattyStatusf(format string, args ...interface{})
-	SetCounterMax(text string, max int)
-	UpdateCountStatus(extraStatusText string)
+	SetCounterMax(max int, text ...interface{})
+	UpdateCountStatus(extraStatusText ...interface{})
 	Count()
 	PauseStatus()
 	ResumeStatus()
-	Println(text string)
+	Println(text ...interface{})
 	Printlnf(format string, args ...interface{})
-	BeginPrint(text string)
-	ContinuePrint(text string)
+	BeginPrint(text ...interface{})
+	ContinuePrint(text ...interface{})
 	ContinuePrintf(format string, args ...interface{})
-	EndPrint(text string)
+	EndPrint(text ...interface{})
 	EndPrintIfStarted()
-	DateRangeStatus(from time.Time, to time.Time, purpose string)
+	DateRangeStatus(from time.Time, to time.Time, purpose ...interface{})
 }
 
 func NewToolPrinter() ToolPrinter {
@@ -69,7 +69,8 @@ type defaultPrinter struct {
 	nestedPrint           bool
 }
 
-func (dp *defaultPrinter) Status(text string) {
+func (dp *defaultPrinter) Status(args ...interface{}) {
+	text := fmt.Sprint(args...)
 	dp.lastStatusText = text // lastStatusText is the true last status message, printed or not
 
 	if dp.pauseCount > 0 {
@@ -133,11 +134,12 @@ func (dp *defaultPrinter) Statusf(format string, args ...interface{}) {
 }
 
 func (dp *defaultPrinter) Clear() {
-	dp.SetCounterMax("", 0)
+	dp.SetCounterMax(0, "")
 	dp.Status("")
 }
 
-func (dp *defaultPrinter) ChattyStatus(text string) {
+func (dp *defaultPrinter) ChattyStatus(args ...interface{}) {
+	text := fmt.Sprint(args...)
 	secondAgo := time.Now().Add(-1 * time.Second)
 	if dp.lastStatus.Before(secondAgo) {
 		dp.Status(text)
@@ -149,13 +151,15 @@ func (dp *defaultPrinter) ChattyStatusf(format string, args ...interface{}) {
 	dp.ChattyStatus(fmt.Sprintf(format, args...))
 }
 
-func (dp *defaultPrinter) SetCounterMax(text string, max int) {
+func (dp *defaultPrinter) SetCounterMax(max int, args ...interface{}) {
+	text := fmt.Sprint(args...)
 	dp.counterText = text
 	dp.counter = 0
 	dp.maxCounter = max
 }
 
-func (dp *defaultPrinter) count(extraStatusText string) {
+func (dp *defaultPrinter) count(args ...interface{}) {
+	extraStatusText := fmt.Sprint(args...)
 	if dp.maxCounter > 0 {
 		dp.counter++
 
@@ -183,7 +187,8 @@ func (dp *defaultPrinter) count(extraStatusText string) {
 	}
 }
 
-func (dp *defaultPrinter) UpdateCountStatus(extraStatusText string) {
+func (dp *defaultPrinter) UpdateCountStatus(args ...interface{}) {
+	extraStatusText := fmt.Sprint(args...)
 	if dp.maxCounter > 0 {
 		dp.counter-- // decrement, then increment in dp.count(), for a net zero counter change
 		dp.count(extraStatusText)
@@ -213,7 +218,8 @@ func (dp *defaultPrinter) ResumeStatus() {
 	}
 }
 
-func (dp *defaultPrinter) Println(text string) {
+func (dp *defaultPrinter) Println(args ...interface{}) {
+	text := fmt.Sprint(args...)
 	if dp.nestedPrint {
 		panic(fmt.Errorf("in a nested print"))
 	}
@@ -227,7 +233,8 @@ func (dp *defaultPrinter) Printlnf(format string, args ...interface{}) {
 	dp.Println(fmt.Sprintf(format, args...))
 }
 
-func (dp *defaultPrinter) BeginPrint(text string) {
+func (dp *defaultPrinter) BeginPrint(args ...interface{}) {
+	text := fmt.Sprint(args...)
 	if dp.nestedPrint {
 		panic(fmt.Errorf("in a nested print"))
 	}
@@ -238,7 +245,8 @@ func (dp *defaultPrinter) BeginPrint(text string) {
 	dp.nestedPrint = true
 }
 
-func (dp *defaultPrinter) ContinuePrint(text string) {
+func (dp *defaultPrinter) ContinuePrint(args ...interface{}) {
+	text := fmt.Sprint(args...)
 	if !dp.nestedPrint {
 		panic(fmt.Errorf("segmented printing didn't begin yet"))
 	}
@@ -251,7 +259,8 @@ func (dp *defaultPrinter) ContinuePrintf(format string, args ...interface{}) {
 	dp.ContinuePrint(fmt.Sprintf(format, args...))
 }
 
-func (dp *defaultPrinter) EndPrint(text string) {
+func (dp *defaultPrinter) EndPrint(args ...interface{}) {
+	text := fmt.Sprint(args...)
 	if !dp.nestedPrint {
 		panic(fmt.Errorf("segmented printing didn't begin yet"))
 	}
@@ -266,7 +275,8 @@ func (dp *defaultPrinter) EndPrintIfStarted() {
 	}
 }
 
-func (dp *defaultPrinter) DateRangeStatus(from time.Time, to time.Time, purpose string) {
+func (dp *defaultPrinter) DateRangeStatus(from time.Time, to time.Time, args ...interface{}) {
+	purpose := fmt.Sprint(args...)
 	if from.Equal(to) {
 		dp.Status(purpose + " for " + from.Format(simpleTimeFormat))
 	} else {

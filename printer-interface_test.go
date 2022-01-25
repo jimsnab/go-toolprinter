@@ -55,7 +55,7 @@ func TestDefaultPrinterStatus(t *testing.T) {
 	output := captureStdout(
 		t,
 		func() {
-			Prn.Status("test 123")
+			Prn.Status("test 12", "3")
 			Prn.Status("test 345")
 			Prn.Clear()
 		},
@@ -180,7 +180,7 @@ func TestDefaultPrinterChattyStatus(t *testing.T) {
 	output := captureStdout(
 		t,
 		func() {
-			prn.ChattyStatus("test 123")
+			prn.ChattyStatus("test 1", "23")
 			prn.ChattyStatus("test 345")
 			time.Sleep(1200 * time.Millisecond)
 			prn.ChattyStatus("test 678")
@@ -218,7 +218,7 @@ func TestDefaultPrinterPercentStatus(t *testing.T) {
 	output := captureStdout(
 		t,
 		func() {
-			prn.SetCounterMax("test", 3)
+			prn.SetCounterMax(3, "te", "st")
 			prn.Count()
 			time.Sleep(300 * time.Millisecond)
 			prn.Count()
@@ -239,7 +239,7 @@ func TestDefaultPrinterPercentStatusQuick(t *testing.T) {
 	output := captureStdout(
 		t,
 		func() {
-			prn.SetCounterMax("test", 100)
+			prn.SetCounterMax(100, "test")
 			for i := 0; i < 110; i++ {
 				prn.Count()
 			}
@@ -257,12 +257,12 @@ func TestDefaultPrinterPercentStatusUpdate(t *testing.T) {
 	output := captureStdout(
 		t,
 		func() {
-			prn.SetCounterMax("test", 100)
+			prn.SetCounterMax(100, "test")
 			prn.Count()
 			time.Sleep(300 * time.Millisecond)
 			prn.UpdateCountStatus("")
 			time.Sleep(300 * time.Millisecond)
-			prn.UpdateCountStatus("pass")
+			prn.UpdateCountStatus("pa", "ss")
 		},
 	)
 
@@ -302,7 +302,7 @@ func TestPrintInStatus(t *testing.T) {
 		t,
 		func() {
 			prn.Status("test 123")
-			prn.Println("TEST")
+			prn.Println("TE", "ST")
 			prn.Status("test 345")
 		},
 	)
@@ -336,7 +336,7 @@ func TestPrintParts(t *testing.T) {
 		t,
 		func() {
 			prn.BeginPrint("")
-			prn.ContinuePrint("TEST")
+			prn.ContinuePrint("TES", "T")
 			prn.ContinuePrintf("%s", "-ABC")
 			prn.EndPrint("")
 		},
@@ -349,8 +349,8 @@ func TestPrintParts(t *testing.T) {
 	output = captureStdout(
 		t,
 		func() {
-			prn.BeginPrint("TEST")
-			prn.EndPrint("-ABC")
+			prn.BeginPrint("T", "EST")
+			prn.EndPrint("-", "ABC")
 		},
 	)
 
@@ -420,7 +420,7 @@ func TestPrintDateRange(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			} else {
-				prn.DateRangeStatus(dt, dt, "testing")
+				prn.DateRangeStatus(dt, dt, "tes", "ting")
 			}
 		},
 	)
