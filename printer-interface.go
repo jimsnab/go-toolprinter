@@ -30,29 +30,29 @@ func (t *defaultTerminal) GetSize(fd int) (int, int, error) {
 
 var xterm = terminalData(&defaultTerminal{})
 
-type Printer interface {
+type ToolPrinter interface {
 	Status(text string)
+	Statusf(format string, args ...interface{})
 	Clear()
 	ChattyStatus(text string)
+	ChattyStatusf(format string, args ...interface{})
 	SetCounterMax(text string, max int)
 	UpdateCountStatus(extraStatusText string)
 	Count()
 	PauseStatus()
 	ResumeStatus()
 	Println(text string)
+	Printlnf(format string, args ...interface{})
 	BeginPrint(text string)
 	ContinuePrint(text string)
+	ContinuePrintf(format string, args ...interface{})
 	EndPrint(text string)
 	EndPrintIfStarted()
 	DateRangeStatus(from time.Time, to time.Time, purpose string)
 }
 
-var Prn Printer = &defaultPrinter{}
-
-func SetPrinter(printer Printer) Printer {
-	priorPrinter := Prn
-	Prn = printer
-	return priorPrinter
+func NewToolPrinter() ToolPrinter {
+	return ToolPrinter(&defaultPrinter{})
 }
 
 const simpleTimeFormat = "2006-01-02 15:04:05 MST"
@@ -128,6 +128,10 @@ func (dp *defaultPrinter) Status(text string) {
 	dp.lastStatus = time.Now()
 }
 
+func (dp *defaultPrinter) Statusf(format string, args ...interface{}) {
+	dp.Status(fmt.Sprintf(format, args...))
+}
+
 func (dp *defaultPrinter) Clear() {
 	dp.SetCounterMax("", 0)
 	dp.Status("")
@@ -139,6 +143,10 @@ func (dp *defaultPrinter) ChattyStatus(text string) {
 		dp.Status(text)
 	}
 	dp.lastStatusText = text // lastStatusText changes even if not printed
+}
+
+func (dp *defaultPrinter) ChattyStatusf(format string, args ...interface{}) {
+	dp.ChattyStatus(fmt.Sprintf(format, args...))
 }
 
 func (dp *defaultPrinter) SetCounterMax(text string, max int) {
@@ -215,6 +223,10 @@ func (dp *defaultPrinter) Println(text string) {
 	dp.ResumeStatus()
 }
 
+func (dp *defaultPrinter) Printlnf(format string, args ...interface{}) {
+	dp.Println(fmt.Sprintf(format, args...))
+}
+
 func (dp *defaultPrinter) BeginPrint(text string) {
 	if dp.nestedPrint {
 		panic(fmt.Errorf("in a nested print"))
@@ -233,6 +245,10 @@ func (dp *defaultPrinter) ContinuePrint(text string) {
 	if len(text) > 0 {
 		fmt.Print(text)
 	}
+}
+
+func (dp *defaultPrinter) ContinuePrintf(format string, args ...interface{}) {
+	dp.ContinuePrint(fmt.Sprintf(format, args...))
 }
 
 func (dp *defaultPrinter) EndPrint(text string) {

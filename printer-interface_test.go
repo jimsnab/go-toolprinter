@@ -16,6 +16,15 @@ var expectBool = testutils.ExpectBool
 var expectPanicError = testutils.ExpectPanicError
 var expectString = testutils.ExpectString
 
+var Prn ToolPrinter
+
+func SetPrinter(toolPrinter ToolPrinter) ToolPrinter {
+	prior := Prn
+	Prn = toolPrinter
+
+	return prior
+}
+
 
 type testTerminal struct {
 	redirected bool
@@ -48,6 +57,23 @@ func TestDefaultPrinterStatus(t *testing.T) {
 		func() {
 			Prn.Status("test 123")
 			Prn.Status("test 345")
+			Prn.Clear()
+		},
+	)
+
+	expectString(t, "test 123\b\b\b345\b\b\b\b\b\b\b\b        \b\b\b\b\b\b\b\b", output)
+}
+
+func TestDefaultPrinterStatusf(t *testing.T) {
+
+	xterm = &testTerminal{}
+	SetPrinter(&defaultPrinter{})
+
+	output := captureStdout(
+		t,
+		func() {
+			Prn.Statusf("%s", "test 123")
+			Prn.Statusf("%s %d", "test", 345)
 			Prn.Clear()
 		},
 	)
@@ -165,6 +191,25 @@ func TestDefaultPrinterChattyStatus(t *testing.T) {
 	expectString(t, "test 123\b\b\b678\b\b\b\b\b\b\b\b        \b\b\b\b\b\b\b\b", output)
 }
 
+func TestDefaultPrinterChattyStatusf(t *testing.T) {
+
+	xterm = &testTerminal{}
+	prn := defaultPrinter{}
+
+	output := captureStdout(
+		t,
+		func() {
+			prn.ChattyStatusf("%s %d", "test", 123)
+			prn.ChattyStatusf("test 345")
+			time.Sleep(1200 * time.Millisecond)
+			prn.ChattyStatusf("%s", "test 678")
+			prn.Clear()
+		},
+	)
+
+	expectString(t, "test 123\b\b\b678\b\b\b\b\b\b\b\b        \b\b\b\b\b\b\b\b", output)
+}
+
 func TestDefaultPrinterPercentStatus(t *testing.T) {
 
 	xterm = &testTerminal{}
@@ -265,6 +310,23 @@ func TestPrintInStatus(t *testing.T) {
 	expectString(t, "test 123\b\b\b\b\b\b\b\b        \b\b\b\b\b\b\b\bTEST\ntest 123\b\b\b345", output)
 }
 
+func TestPrintlnfInStatus(t *testing.T) {
+
+	xterm = &testTerminal{}
+	prn := defaultPrinter{}
+
+	output := captureStdout(
+		t,
+		func() {
+			prn.Status("test 123")
+			prn.Printlnf("%s", "TEST")
+			prn.Status("test 345")
+		},
+	)
+
+	expectString(t, "test 123\b\b\b\b\b\b\b\b        \b\b\b\b\b\b\b\bTEST\ntest 123\b\b\b345", output)
+}
+
 func TestPrintParts(t *testing.T) {
 
 	xterm = &testTerminal{}
@@ -275,7 +337,7 @@ func TestPrintParts(t *testing.T) {
 		func() {
 			prn.BeginPrint("")
 			prn.ContinuePrint("TEST")
-			prn.ContinuePrint("-ABC")
+			prn.ContinuePrintf("%s", "-ABC")
 			prn.EndPrint("")
 		},
 	)
