@@ -55,13 +55,14 @@ type ToolPrinter interface {
 }
 
 func NewToolPrinter() ToolPrinter {
-	return ToolPrinter(&defaultPrinter{ stdoutPrinter: fmt.Print })
+	return ToolPrinter(&defaultPrinter{ stdoutPrinter: fmt.Print, statusPrinter: fmt.Print })
 }
 
 const simpleTimeFormat = "2006-01-02 15:04:05 MST"
 
 type defaultPrinter struct {
 	stdoutPrinter         func(a ...interface{}) (n int, err error)
+	statusPrinter         func(a ...interface{}) (n int, err error)
 	pauseCount            int
 	lastStatus            time.Time
 	lastStatusText        string
@@ -116,18 +117,18 @@ func (dp *defaultPrinter) Status(args ...interface{}) {
 
 	// from the end of the last text, backspace until the new shorter base is reached
 	if baseLength < len(lastRune) {
-		dp.stdoutPrinter(strings.Repeat("\b", len(lastRune)-baseLength))
+		dp.statusPrinter(strings.Repeat("\b", len(lastRune)-baseLength))
 	}
 
 	// print the part of the new text that is different from the last
-	dp.stdoutPrinter(simpleutils.Substr(text, baseLength, textLength-baseLength))
+	dp.statusPrinter(simpleutils.Substr(text, baseLength, textLength-baseLength))
 
 	// if new text is shorter than the last text, erase extra right side characters
 	eraseLength := 0
 	if textLength < len(lastRune) {
 		eraseLength = len(lastRune) - textLength
-		dp.stdoutPrinter(strings.Repeat(" ", eraseLength))
-		dp.stdoutPrinter(strings.Repeat("\b", eraseLength))
+		dp.statusPrinter(strings.Repeat(" ", eraseLength))
+		dp.statusPrinter(strings.Repeat("\b", eraseLength))
 	}
 
 	dp.lastPrintedStatusText = text

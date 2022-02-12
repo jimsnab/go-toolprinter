@@ -14,6 +14,7 @@ type TestPrinter struct {
 func NewTestPrinter() *TestPrinter {
 	tp := TestPrinter{}
 	tp.stdoutPrinter = tp.print
+	tp.statusPrinter = func(a ...interface{}) (n int, err error) { text := fmt.Sprint(a...) ; n = len(text) ; return }
 	tp.lines = make([]string, 0)
 	return &tp
 }
@@ -51,24 +52,4 @@ func (tp *TestPrinter) GetStatusText() string {
 
 func (tp *TestPrinter) GetLines() []string {
 	return tp.lines
-}
-
-func (tp *TestPrinter) Status(args ...interface{}) {
-	text := fmt.Sprint(args...)
-	tp.lastStatusText = text // lastStatusText is the true last status message, printed or not
-
-	if tp.pauseCount > 0 {
-		tp.storedStatus = text
-	}
-}
-
-func (tp *TestPrinter) Println(args ...interface{}) {
-	text := fmt.Sprint(args...)
-	if tp.nestedPrint {
-		panic(fmt.Errorf("in a nested print"))
-	}
-
-	tp.PauseStatus()
-	tp.lines = append(tp.lines, text)
-	tp.ResumeStatus()
 }
