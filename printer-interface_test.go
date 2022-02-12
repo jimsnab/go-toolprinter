@@ -15,6 +15,7 @@ var expectError = testutils.ExpectError
 var expectBool = testutils.ExpectBool
 var expectPanicError = testutils.ExpectPanicError
 var expectString = testutils.ExpectString
+var expectValue = testutils.ExpectValue
 
 var Prn ToolPrinter
 
@@ -50,7 +51,7 @@ func (t *testTerminal) GetSize(fd int) (int, int, error) {
 func TestDefaultPrinterStatus(t *testing.T) {
 
 	xterm = &testTerminal{}
-	SetPrinter(&defaultPrinter{})
+	SetPrinter(NewToolPrinter())
 
 	output := captureStdout(
 		t,
@@ -67,7 +68,7 @@ func TestDefaultPrinterStatus(t *testing.T) {
 func TestDefaultPrinterStatusf(t *testing.T) {
 
 	xterm = &testTerminal{}
-	SetPrinter(&defaultPrinter{})
+	SetPrinter(NewToolPrinter())
 
 	output := captureStdout(
 		t,
@@ -84,7 +85,7 @@ func TestDefaultPrinterStatusf(t *testing.T) {
 func TestDefaultPrinterStatusRedirected(t *testing.T) {
 
 	xterm = &testTerminal{redirected: true}
-	SetPrinter(&defaultPrinter{})
+	SetPrinter(NewToolPrinter())
 
 	output := captureStdout(
 		t,
@@ -101,7 +102,7 @@ func TestDefaultPrinterStatusRedirected(t *testing.T) {
 func TestDefaultPrinterStatusBadTerminal(t *testing.T) {
 
 	xterm = &testTerminal{badSize: true}
-	SetPrinter(&defaultPrinter{})
+	SetPrinter(NewToolPrinter())
 
 	output := captureStdout(
 		t,
@@ -118,7 +119,7 @@ func TestDefaultPrinterStatusBadTerminal(t *testing.T) {
 func TestDefaultPrinterStatusTruncated(t *testing.T) {
 
 	xterm = &testTerminal{smallWidth: true}
-	SetPrinter(&defaultPrinter{})
+	SetPrinter(NewToolPrinter())
 
 	output := captureStdout(
 		t,
@@ -134,7 +135,7 @@ func TestDefaultPrinterStatusTruncated(t *testing.T) {
 func TestDefaultPrinterStatusErased(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := &defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -147,7 +148,7 @@ func TestDefaultPrinterStatusErased(t *testing.T) {
 
 	expectString(t, "test 1234567\b\b\b\b\b\b\b\b!       \b\b\b\b\b\b\b\b\b\b\b\b     \b\b\b\b\b", output)
 
-	prn = &defaultPrinter{}
+	prn = NewToolPrinter()
 
 	output = captureStdout(
 		t,
@@ -159,7 +160,7 @@ func TestDefaultPrinterStatusErased(t *testing.T) {
 
 	expectString(t, "test!\b\b\b\b\bbar  \b\b", output)
 
-	prn = &defaultPrinter{}
+	prn = NewToolPrinter()
 
 	output = captureStdout(
 		t,
@@ -175,7 +176,7 @@ func TestDefaultPrinterStatusErased(t *testing.T) {
 func TestDefaultPrinterChattyStatus(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -194,7 +195,7 @@ func TestDefaultPrinterChattyStatus(t *testing.T) {
 func TestDefaultPrinterChattyStatusf(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -213,7 +214,7 @@ func TestDefaultPrinterChattyStatusf(t *testing.T) {
 func TestDefaultPrinterPercentStatus(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -234,7 +235,7 @@ func TestDefaultPrinterPercentStatus(t *testing.T) {
 func TestDefaultPrinterPercentStatusQuick(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -252,7 +253,7 @@ func TestDefaultPrinterPercentStatusQuick(t *testing.T) {
 func TestDefaultPrinterPercentStatusUpdate(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -272,7 +273,7 @@ func TestDefaultPrinterPercentStatusUpdate(t *testing.T) {
 func TestDefaultPausedStatus(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -296,7 +297,7 @@ func TestDefaultPausedStatus(t *testing.T) {
 func TestPrintInStatus(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -313,7 +314,7 @@ func TestPrintInStatus(t *testing.T) {
 func TestPrintlnfInStatus(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -330,7 +331,7 @@ func TestPrintlnfInStatus(t *testing.T) {
 func TestPrintParts(t *testing.T) {
 
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -344,7 +345,7 @@ func TestPrintParts(t *testing.T) {
 
 	expectString(t, "TEST-ABC\n", output)
 
-	prn = defaultPrinter{}
+	prn = NewToolPrinter()
 
 	output = captureStdout(
 		t,
@@ -356,7 +357,7 @@ func TestPrintParts(t *testing.T) {
 
 	expectString(t, "TEST-ABC\n", output)
 
-	prn = defaultPrinter{}
+	prn = NewToolPrinter()
 
 	output = captureStdout(
 		t,
@@ -367,7 +368,7 @@ func TestPrintParts(t *testing.T) {
 
 	expectString(t, "", output)
 
-	prn = defaultPrinter{}
+	prn = NewToolPrinter()
 
 	output = captureStdout(
 		t,
@@ -382,7 +383,7 @@ func TestPrintParts(t *testing.T) {
 
 func TestPrintInParts(t *testing.T) {
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	prn.BeginPrint("")
 	expectPanicError(
@@ -396,7 +397,7 @@ func TestPrintInParts(t *testing.T) {
 		func() { prn.Println("Illegal") },
 	)
 
-	prn = defaultPrinter{}
+	prn = NewToolPrinter()
 	expectPanicError(
 		t,
 		fmt.Errorf("segmented printing didn't begin yet"),
@@ -411,7 +412,7 @@ func TestPrintInParts(t *testing.T) {
 
 func TestPrintDateRange(t *testing.T) {
 	xterm = &testTerminal{}
-	prn := defaultPrinter{}
+	prn := NewToolPrinter()
 
 	output := captureStdout(
 		t,
@@ -427,7 +428,7 @@ func TestPrintDateRange(t *testing.T) {
 
 	expectString(t, "testing for 2022-01-01 12:00:00 EST", output)
 
-	prn = defaultPrinter{}
+	prn = NewToolPrinter()
 
 	output = captureStdout(
 		t,
@@ -460,4 +461,31 @@ func TestExerciseDefaultTerminal(t *testing.T) {
 	expectBool(t, false, dt.IsTerminal(int(w.Fd())))
 	_, _, err = dt.GetSize(int(w.Fd()))
 	expectError(t, syscall.ENOTTY, err)
+}
+
+func TestVerbose(t *testing.T) {
+	prn := NewTestPrinter()
+
+	// off initially
+	prn.VerbosePrintln("initial input")
+	expectValue(t, 0, len(prn.GetLines()))
+
+	// turn it on
+	prn.EnableVerbose(true)
+	prn.VerbosePrintln("verbose 1")
+	expectValue(t, 1, len(prn.GetLines()))
+	expectString(t, "verbose 1", prn.GetLines()[0])
+
+	prn.EnableVerbose(true)	// no op
+	prn.VerbosePrintln("verbose 2")
+	expectValue(t, 2, len(prn.GetLines()))
+	expectString(t, "verbose 2", prn.GetLines()[1])
+
+	prn.EnableVerbose(false)
+	prn.VerbosePrintln("verbose 3")
+	expectValue(t, 2, len(prn.GetLines()))
+
+	prn.EnableVerbose(false)
+	prn.VerbosePrintln("verbose 4")
+	expectValue(t, 2, len(prn.GetLines()))
 }

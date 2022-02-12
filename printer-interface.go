@@ -8,8 +8,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"golang.org/x/term"
 	"github.com/jimsnab/go-simpleutils"
+	"golang.org/x/term"
 )
 
 type terminalData interface {
@@ -49,15 +49,19 @@ type ToolPrinter interface {
 	EndPrint(text ...interface{})
 	EndPrintIfStarted()
 	DateRangeStatus(from time.Time, to time.Time, purpose ...interface{})
+	VerbosePrintln(text ...interface{})
+	VerbosePrintlnf(format string, args ...interface{})
+	EnableVerbose(enabled bool)
 }
 
 func NewToolPrinter() ToolPrinter {
-	return ToolPrinter(&defaultPrinter{})
+	return ToolPrinter(&defaultPrinter{ stdoutPrinter: fmt.Print })
 }
 
 const simpleTimeFormat = "2006-01-02 15:04:05 MST"
 
 type defaultPrinter struct {
+	stdoutPrinter         func(a ...interface{}) (n int, err error)
 	pauseCount            int
 	lastStatus            time.Time
 	lastStatusText        string
@@ -67,6 +71,7 @@ type defaultPrinter struct {
 	counter               int
 	maxCounter            int
 	nestedPrint           bool
+	verboseEnabled        bool
 }
 
 func (dp *defaultPrinter) Status(args ...interface{}) {
@@ -111,18 +116,18 @@ func (dp *defaultPrinter) Status(args ...interface{}) {
 
 	// from the end of the last text, backspace until the new shorter base is reached
 	if baseLength < len(lastRune) {
-		fmt.Print(strings.Repeat("\b", len(lastRune)-baseLength))
+		dp.stdoutPrinter(strings.Repeat("\b", len(lastRune)-baseLength))
 	}
 
 	// print the part of the new text that is different from the last
-	fmt.Print(simpleutils.Substr(text, baseLength, textLength-baseLength))
+	dp.stdoutPrinter(simpleutils.Substr(text, baseLength, textLength-baseLength))
 
 	// if new text is shorter than the last text, erase extra right side characters
 	eraseLength := 0
 	if textLength < len(lastRune) {
 		eraseLength = len(lastRune) - textLength
-		fmt.Print(strings.Repeat(" ", eraseLength))
-		fmt.Print(strings.Repeat("\b", eraseLength))
+		dp.stdoutPrinter(strings.Repeat(" ", eraseLength))
+		dp.stdoutPrinter(strings.Repeat("\b", eraseLength))
 	}
 
 	dp.lastPrintedStatusText = text
@@ -225,7 +230,8 @@ func (dp *defaultPrinter) Println(args ...interface{}) {
 	}
 
 	dp.PauseStatus()
-	fmt.Println(text)
+	dp.stdoutPrinter(text)
+	dp.stdoutPrinter("\n")
 	dp.ResumeStatus()
 }
 
@@ -240,7 +246,7 @@ func (dp *defaultPrinter) BeginPrint(args ...interface{}) {
 	}
 	dp.PauseStatus()
 	if len(text) > 0 {
-		fmt.Print(text)
+		dp.stdoutPrinter(text)
 	}
 	dp.nestedPrint = true
 }
@@ -251,7 +257,7 @@ func (dp *defaultPrinter) ContinuePrint(args ...interface{}) {
 		panic(fmt.Errorf("segmented printing didn't begin yet"))
 	}
 	if len(text) > 0 {
-		fmt.Print(text)
+		dp.stdoutPrinter(text)
 	}
 }
 
@@ -264,7 +270,8 @@ func (dp *defaultPrinter) EndPrint(args ...interface{}) {
 	if !dp.nestedPrint {
 		panic(fmt.Errorf("segmented printing didn't begin yet"))
 	}
-	fmt.Println(text)
+	dp.stdoutPrinter(text)
+	dp.stdoutPrinter("\n")
 	dp.ResumeStatus()
 	dp.nestedPrint = false
 }
@@ -281,5 +288,21 @@ func (dp *defaultPrinter) DateRangeStatus(from time.Time, to time.Time, args ...
 		dp.Status(purpose + " for " + from.Format(simpleTimeFormat))
 	} else {
 		dp.Status(purpose + " between " + from.Format(simpleTimeFormat) + " and " + to.Format(simpleTimeFormat))
+	}
+}
+
+func (dp *defaultPrinter) EnableVerbose(enable bool) {
+	dp.verboseEnabled = enable
+}
+
+func (dp *defaultPrinter) VerbosePrintln(args ...interface{}) {
+	if dp.verboseEnabled {
+		dp.Println(args...)
+	}
+}
+
+func (dp *defaultPrinter) VerbosePrintlnf(format string, args ...interface{}) {
+	if dp.verboseEnabled {
+		dp.Printlnf(format, args...)
 	}
 }
