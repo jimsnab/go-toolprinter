@@ -26,6 +26,9 @@ type ToolPrinter interface {
 	EndPrint(text ...interface{})
 	EndPrintIfStarted()
 	DateRangeStatus(from time.Time, to time.Time, purpose ...interface{})
+	VerbosePrintln(text ...interface{})
+	VerbosePrintlnf(format string, args ...interface{})
+	EnableVerbose(enabled bool)
 }
 ```
 
@@ -112,3 +115,8 @@ When you can avoid `fmt` and `log`, use the following `ToolPrinter` functions to
   specified and does not add a line break. `EndPrint()` prints a line break, then reprints the status message, if any.
 * `EndPrintIfStarted()` will perform `EndPrint()` only if printing was started with `BeginPrint()` but not ended.
 
+## Verbose Printing
+Tools often have different levels of printing. This library supports two - regular and verbose.
+
+* `VerbosePrintln()` and `VerbosePrintlnf()` only print when verbose is enabled.
+* `EnableVerbose()` controls whether verbose printing is on or off
