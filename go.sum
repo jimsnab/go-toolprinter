@@ -1,6 +1,6 @@
 github.com/jimsnab/go-simpleutils v0.0.0-20220125174953-66c72b8a420d/go.mod h1:dZYo7pmxew3EWiGlGqGlvqNhbOXnFIdL4kgVR8aFNrY=
-github.com/jimsnab/go-simpleutils v1.0.8 h1:fxqlYuThnDM7p6Jqd2MmH6uqvzT0e/YejCb8Bs4htuA=
-github.com/jimsnab/go-simpleutils v1.0.8/go.mod h1:dZYo7pmxew3EWiGlGqGlvqNhbOXnFIdL4kgVR8aFNrY=
+github.com/jimsnab/go-simpleutils v1.0.11 h1:17tmrsEt0CI0ZPeOgstcvzxgeM9g2C9dG2+SjEX0G+0=
+github.com/jimsnab/go-simpleutils v1.0.11/go.mod h1:dZYo7pmxew3EWiGlGqGlvqNhbOXnFIdL4kgVR8aFNrY=
 github.com/jimsnab/go-testutils v0.0.0-20220125175759-6756cb9c807d h1:k2PVf+f9TpY0Uv3+cTNP5TUOcwjDiSxxdJe3d4qFlHE=
 github.com/jimsnab/go-testutils v0.0.0-20220125175759-6756cb9c807d/go.mod h1:Yj7J+kIkMMvcT5NZ0vPfCMNA6vcpBxHrD8I8d/YHK6g=
 golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
