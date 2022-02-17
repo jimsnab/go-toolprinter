@@ -55,7 +55,7 @@ type ToolPrinter interface {
 }
 
 func NewToolPrinter() ToolPrinter {
-	return ToolPrinter(&defaultPrinter{ stdoutPrinter: fmt.Print, statusPrinter: fmt.Print })
+	return ToolPrinter(&defaultPrinter{stdoutPrinter: fmt.Print, statusPrinter: fmt.Print})
 }
 
 const simpleTimeFormat = "2006-01-02 15:04:05 MST"

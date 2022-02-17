@@ -26,7 +26,6 @@ func SetPrinter(toolPrinter ToolPrinter) ToolPrinter {
 	return prior
 }
 
-
 type testTerminal struct {
 	redirected bool
 	badSize    bool
@@ -476,7 +475,7 @@ func TestVerbose(t *testing.T) {
 	expectValue(t, 1, len(prn.GetLines()))
 	expectString(t, "verbose 1", prn.GetLines()[0])
 
-	prn.EnableVerbose(true)	// no op
+	prn.EnableVerbose(true) // no op
 	prn.VerbosePrintln("verbose 2")
 	expectValue(t, 2, len(prn.GetLines()))
 	expectString(t, "verbose 2", prn.GetLines()[1])

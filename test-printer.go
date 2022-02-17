@@ -8,13 +8,13 @@ import (
 type TestPrinter struct {
 	defaultPrinter
 	partial bool
-	lines []string
+	lines   []string
 }
 
 func NewTestPrinter() *TestPrinter {
 	tp := TestPrinter{}
 	tp.stdoutPrinter = tp.print
-	tp.statusPrinter = func(a ...interface{}) (n int, err error) { text := fmt.Sprint(a...) ; n = len(text) ; return }
+	tp.statusPrinter = func(a ...interface{}) (n int, err error) { text := fmt.Sprint(a...); n = len(text); return }
 	tp.lines = make([]string, 0)
 	return &tp
 }
@@ -28,7 +28,7 @@ func (tp *TestPrinter) print(args ...interface{}) (n int, err error) {
 	end := len(parts) - 1
 	pos := 0
 	if tp.partial {
-		tp.lines[len(tp.lines) - 1] += parts[0]
+		tp.lines[len(tp.lines)-1] += parts[0]
 		if pos == end {
 			return
 		}
