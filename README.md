@@ -6,7 +6,7 @@ as a way to separate "progress bar" printing from "final output".
 
 The interface is:
 
-```
+```go
 type ToolPrinter interface {
 	Status(text ...interface{})
 	Statusf(format string, args ...interface{})
@@ -38,7 +38,7 @@ implmentation will print status neatly to a ttl, while suppressing it if
 
 Example Use:
 
-```
+```go
 package main
 
 import (
@@ -71,13 +71,16 @@ re-prints the latest status message.
 Date range status can be printed with `DateRangeStatus()`.
 
 ## Progress Counter
+
 `SetCounterMax()` starts a progress status line, such as:
 
-```
+```go
   prn.SetCounterMax("Reading", 1000)
 ```
+
 produces the following status message:
-```
+
+```text
 Reading 1 of 1000 0%
 ```
 
@@ -89,20 +92,26 @@ the processing of one item can be broken down into individual named steps. For e
 "querying", "sorting", "analyzing", "generating output". The program can call `UpdateCountStatus()` to
 print querying, sorting, etc., to achieve status such as:
 
-```
+```text
 Processing 1 of 3 33% querying
 ```
+
 then
-```
+
+```text
 Processing 1 of 3 33% sorting
 ```
+
 then
-```
+
+```text
 Processing 1 of 3 33% analyzing
 ```
+
 and so on.
 
 ## Printing Regular Output
+
 To use `fmt`, `log` or something similar that produces stdout output, first call `PauseStatus()`, then print to stdout, then
 call `ResumeStatus()`.
 
@@ -116,7 +125,22 @@ When you can avoid `fmt` and `log`, use the following `ToolPrinter` functions to
 * `EndPrintIfStarted()` will perform `EndPrint()` only if printing was started with `BeginPrint()` but not ended.
 
 ## Verbose Printing
+
 Tools often have different levels of printing. This library supports two - regular and verbose.
 
 * `VerbosePrintln()` and `VerbosePrintlnf()` only print when verbose is enabled.
 * `EnableVerbose()` controls whether verbose printing is on or off
+
+## Test Printer
+
+For unit tests, a test version of the `ToolPrinter` interface is provided. Instead of printing, it captures output lines
+into an array, giving unit tests an easy way to check for expected output. Status text is not captured, except for the
+current status line that a unit test can examine.
+
+Obtain a test printer instance with `NewTestPrinter()`.
+
+Additional methods of a test printer are:
+
+* `GetLines()` returns a string array of printed lines
+* `String()` returns the line-parsed input as a single string
+* `GetStatusText()` returns the current status text

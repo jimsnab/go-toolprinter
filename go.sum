@@ -3,10 +3,14 @@ github.com/djherbis/atime v1.1.0/go.mod h1:28OF6Y8s3NQWwacXc5eZTsEsiMzp7LF8MbXE+
 github.com/jimsnab/go-simpleutils v0.0.0-20220125174953-66c72b8a420d/go.mod h1:dZYo7pmxew3EWiGlGqGlvqNhbOXnFIdL4kgVR8aFNrY=
 github.com/jimsnab/go-simpleutils v1.0.12 h1:DdL/0OvpFHmDNbzaC1NnZNGvd3+l5akUQHBRbyQdhvM=
 github.com/jimsnab/go-simpleutils v1.0.12/go.mod h1:RudIoMHFP5s+x86U0VOX4Ij3aqDFDf+gxPGor8stRC4=
+github.com/jimsnab/go-simpleutils v1.0.13 h1:7Qxfv7xK7YG2mOiBITfrWzOeToezj9XiNSxU/IKSsJA=
+github.com/jimsnab/go-simpleutils v1.0.13/go.mod h1:RudIoMHFP5s+x86U0VOX4Ij3aqDFDf+gxPGor8stRC4=
 github.com/jimsnab/go-testutils v0.0.0-20220125175759-6756cb9c807d h1:k2PVf+f9TpY0Uv3+cTNP5TUOcwjDiSxxdJe3d4qFlHE=
 github.com/jimsnab/go-testutils v0.0.0-20220125175759-6756cb9c807d/go.mod h1:Yj7J+kIkMMvcT5NZ0vPfCMNA6vcpBxHrD8I8d/YHK6g=
 golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220209214540-3681064d5158 h1:rm+CHSpPEEW2IsXUib1ThaHIjuBVZjxNgSKmBLFfD4c=
 golang.org/x/sys v0.0.0-20220209214540-3681064d5158/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c h1:sSIdNI2Dd6vGv47bKc/xArpfxVmEz2+3j0E6I484xC4=
+golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 h1:JGgROgKl9N8DuW20oFS5gxc+lE67/N3FcwmBPMe7ArY=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=

@@ -53,3 +53,14 @@ func (tp *TestPrinter) GetStatusText() string {
 func (tp *TestPrinter) GetLines() []string {
 	return tp.lines
 }
+
+func (tp *TestPrinter) String() string {
+	var sb strings.Builder
+
+	for _, line := range tp.lines {
+		sb.WriteString(line)
+		sb.WriteRune('\n')
+	}
+
+	return sb.String()
+}
