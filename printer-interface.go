@@ -3,8 +3,8 @@ package toolprinter
 import (
 	"fmt"
 	"math"
+	"os"
 	"strings"
-	"syscall"
 	"time"
 	"unicode/utf8"
 
@@ -84,11 +84,11 @@ func (dp *defaultPrinter) Status(args ...interface{}) {
 		return
 	}
 
-	if !xterm.IsTerminal(syscall.Stdout) {
+	if !xterm.IsTerminal(int(os.Stdout.Fd())) {
 		return
 	}
 
-	width, _, err := xterm.GetSize(syscall.Stdout)
+	width, _, err := xterm.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
 		return
 	}
