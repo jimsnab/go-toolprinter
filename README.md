@@ -131,6 +131,10 @@ Tools often have different levels of printing. This library supports two - regul
 * `VerbosePrintln()` and `VerbosePrintlnf()` only print when verbose is enabled.
 * `EnableVerbose()` controls whether verbose printing is on or off
 
+## String Printer
+
+Print to a string buffer using `NewStringPrinter()`. Get the content via `sp.Text()` where `sp` is your string printer instance.
+
 ## Test Printer
 
 For unit tests, a test version of the `ToolPrinter` interface is provided. Instead of printing, it captures output lines
